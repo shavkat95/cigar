@@ -71,89 +71,125 @@ def build_model():
     x_8 = build_cnn(img_inputs)
     
     
-    x_1 = tf.keras.Sequential([
+    x_1_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dense(1024, activation='softmax')
+        tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([old_x_1, x_2]))
-
-
-    x_2 = tf.keras.Sequential([
+    
+    x_2_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dense(1024, activation='softmax')
+        tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([x_2, x_3]))
-
-
-    x_3 = tf.keras.Sequential([
+    
+    x_3_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dense(1024, activation='softmax')
+        tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([x_3, x_4]))
-
-
-    x_4 = tf.keras.Sequential([
+    
+    x_4_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dense(1024, activation='softmax')
+        tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([x_4, x_5]))
-
-
-    x_5 = tf.keras.Sequential([
+    
+    x_5_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1024, activation='relu'),
-        tf.keras.layers.Dense(1024, activation='softmax')
+        tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([x_5, x_6]))
-
-
+    
     x_6_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1024),
     ])(keras.layers.Add()([x_6, x_7]))
+    
+    x_7_f = tf.keras.Sequential([
+        tf.keras.layers.Conv2D(8, 2, 1),
+        tf.keras.layers.Conv2D(8, 2, 1),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(1024),
+    ])(keras.layers.Add()([x_7, x_8]))
+    
+    x_8_f = tf.keras.Sequential([
+        tf.keras.layers.Conv2D(8, 2, 1),
+        tf.keras.layers.Conv2D(8, 2, 1),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(1024),
+    ])(keras.layers.Add()([x_8, old_x_1]))
+
+    x_1 = tf.keras.Sequential([
+        tf.keras.layers.Dense(1024, activation='relu'),
+        tf.keras.layers.Dense(1024, activation='softmax')
+    ])(x_1_f)
+
+    x_1 = tf.keras.layers.Add([x_1,x_7_f])
+
+    
+    
+    x_2 = tf.keras.Sequential([
+        tf.keras.layers.Dense(1024, activation='relu'),
+        tf.keras.layers.Dense(1024, activation='softmax')
+    ])(x_2_f)
+
+    x_2 = tf.keras.layers.Add([x_2,x_8_f])
+
+    
+    x_3 = tf.keras.Sequential([
+        tf.keras.layers.Dense(1024, activation='relu'),
+        tf.keras.layers.Dense(1024, activation='softmax')
+    ])(x_3_f)
+
+    x_3 = tf.keras.layers.Add([x_3,x_1_f])
+    
+    
+    x_4 = tf.keras.Sequential([
+        tf.keras.layers.Dense(1024, activation='relu'),
+        tf.keras.layers.Dense(1024, activation='softmax')
+    ])(x_4_f)
+
+    x_4 = tf.keras.layers.Add([x_4,x_2_f])
+    
+    
+    x_5 = tf.keras.Sequential([
+        tf.keras.layers.Dense(1024, activation='relu'),
+        tf.keras.layers.Dense(1024, activation='softmax')
+    ])(x_5_f)
+
+    x_5 = tf.keras.layers.Add([x_5,x_3_f])
 
     x_6 = tf.keras.Sequential([
         tf.keras.layers.Dense(1024, activation='relu'),
         tf.keras.layers.Dense(1024, activation='softmax')
     ])(x_6_f)
 
-    x_6 = tf.keras.layers.Add([x_6,x_6_f])
-
-
-    x_6_f = tf.keras.layers.Conv2D(8, 2, 1)(tf.keras.layers.Conv2D(8, 2, 1)(tf.keras.layers.Flatten()))
+    x_6 = tf.keras.layers.Add([x_6,x_4_f])
     
-    x_6_d = tf.keras.layers.Dense(1024, activation='softmax')(tf.keras.layers.Dense(1024, activation='relu'))
     
-    x_6 = x_6_f(tf.keras.layers.Dense(1024, activation='relu')(tf.keras.layers.Dense(1024, activation='softmax')))(keras.layers.Add()([x_6, x_7]))
-
-
     x_7 = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(8, 2, 1),
-        tf.keras.layers.Conv2D(8, 2, 1),
-        tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1024, activation='relu'),
         tf.keras.layers.Dense(1024, activation='softmax')
-    ])(keras.layers.Add()([x_7, x_8]))
+    ])(x_7_f)
 
+    x_7 = tf.keras.layers.Add([x_7,x_5_f])
 
+    
+    
     x_8 = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(8, 2, 1),
-        tf.keras.layers.Conv2D(8, 2, 1),
-        tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1024, activation='relu'),
         tf.keras.layers.Dense(1024, activation='softmax')
-    ])(keras.layers.Add()([x_8, old_x_1]))
+    ])(x_8_f)
+
+    x_8 = tf.keras.layers.Add([x_8,x_6_f])
 
 
 
@@ -161,15 +197,15 @@ def build_model():
 
     x_1_2 = tf.keras.layers.Dense(1024)(keras.layers.Add()([x_3, x_4]))
 
-    x_2_1 =tf.keras.layers.Dense(1024)(keras.layers.Add()([x_1_1, x_5]))
+    x_2_1 =tf.keras.layers.Dense(1024, activation='relu')(keras.layers.Add()([x_1_1, x_5]))
 
-    x_2_2 =tf.keras.layers.Dense(1024)(keras.layers.Add()([x_1_2, x_6]))
+    x_2_2 =tf.keras.layers.Dense(1024, activation='relu')(keras.layers.Add()([x_1_2, x_6]))
 
-    x_3_1 =tf.keras.layers.Dense(1024)(keras.layers.Concatenate()([x_2_1, x_7]))
+    x_3_1 =tf.keras.layers.Dense(1024, activation='softmax')(keras.layers.Concatenate()([x_2_1, x_7]))
 
     x_3_1 = keras.layers.Add()([x_3_1, x_1_1])
 
-    x_3_2 =tf.keras.layers.Dense(1024)(keras.layers.Concatenate()([x_2_2, x_8]))
+    x_3_2 =tf.keras.layers.Dense(1024, activation='softmax')(keras.layers.Concatenate()([x_2_2, x_8]))
 
     x_3_2 = keras.layers.Add()([x_3_2, x_1_2])
 
