@@ -61,7 +61,7 @@ def build_model():
         ])(im_inputs)
         return mod
     
-    old_x_1 = build_cnn(img_inputs)
+    x_1 = build_cnn(img_inputs)
     x_2 = build_cnn(img_inputs)
     x_3 = build_cnn(img_inputs)
     x_4 = build_cnn(img_inputs)
@@ -76,7 +76,7 @@ def build_model():
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1024),
-    ])(keras.layers.Add()([old_x_1, x_2]))
+    ])(keras.layers.Add()([x_1, x_2]))
     
     x_2_f = tf.keras.Sequential([
         tf.keras.layers.Conv2D(8, 2, 1),
@@ -125,7 +125,7 @@ def build_model():
         tf.keras.layers.Conv2D(8, 2, 1),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1024),
-    ])(keras.layers.Add()([x_8, old_x_1]))
+    ])(keras.layers.Add()([x_8, x_1]))
 
     x_1 = tf.keras.Sequential([
         tf.keras.layers.Dense(1024, activation='relu'),
