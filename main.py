@@ -332,27 +332,94 @@ def build_model(dp_rate = 0.5):
     x_3_2 = keras.layers.Concatenate()([x_3_2, x_1_2])
 
 
-    x_4 = tf.keras.layers.Dense(512)(keras.layers.Concatenate()([x_3_1, x_3_2]))
+    x_5 = tf.keras.layers.Dense(512)(keras.layers.Concatenate()([x_3_1, x_3_2]))
 
-    x_4 = keras.layers.BatchNormalization()(x_4)
-
-    
-
-    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_4)
+    x_5 = keras.layers.BatchNormalization()(x_5)
 
     top_dropoutrate = dp_rate
+    
+    def mk_wires(x_x):
+        
+        old_w_1 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_2 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_3 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_4 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_5 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_6 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_7 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        w_8 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
+        
+        old_w_1 = tf.keras.layers.Dense(64, use_bias=False)(old_w_1)
+        w_2 = tf.keras.layers.Dense(64, use_bias=False)(w_2)
+        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+        
+        old_w_1 = keras.layers.ELU(alpha=0.5)(old_w_1)
+        w_2 = keras.layers.ELU(alpha=0.5)(w_2)
+        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
+        w_4 = keras.layers.ELU(alpha=0.5)(w_4)
+        w_5 = keras.layers.ELU(alpha=0.5)(w_5)
+        w_6 = keras.layers.ELU(alpha=0.5)(w_6)
+        w_7 = keras.layers.ELU(alpha=0.5)(w_7)
+        w_8 = keras.layers.ELU(alpha=0.5)(w_8)
+        
+        w_1 = tf.keras.layers.multiply()([old_w_1, w_2])
+        old_w_2 = tf.keras.layers.multiply()([w_2, w_3])
+        w_3 = tf.keras.layers.multiply()([w_3, w_4])
+        w_4 = tf.keras.layers.multiply()([w_4, w_5])
+        w_5 = tf.keras.layers.multiply()([w_5, w_6])
+        w_6 = tf.keras.layers.multiply()([w_6, w_7])
+        w_7 = tf.keras.layers.multiply()([w_7, w_8])
+        w_8 = tf.keras.layers.multiply()([w_8, old_w_1])
+        
+        w_1 = tf.keras.layers.Dense(64, use_bias=False)(w_1)
+        old_w_2 = tf.keras.layers.Dense(64, use_bias=False)(old_w_2)
+        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+        
+        w_1 = keras.layers.ELU(alpha=0.5)(w_1)
+        old_w_2 = keras.layers.ELU(alpha=0.5)(old_w_2)
+        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
+        w_4 = keras.layers.ELU(alpha=0.5)(w_4)
+        w_5 = keras.layers.ELU(alpha=0.5)(w_5)
+        w_6 = keras.layers.ELU(alpha=0.5)(w_6)
+        w_7 = keras.layers.ELU(alpha=0.5)(w_7)
+        w_8 = keras.layers.ELU(alpha=0.5)(w_8)
+        
+        w_1 = tf.keras.layers.multiply()([w_1, w_3])
+        w_2 = tf.keras.layers.multiply()([old_w_2, w_4])
+        w_3 = tf.keras.layers.multiply()([w_3, w_5])
+        w_4 = tf.keras.layers.multiply()([w_4, w_6])
+        w_5 = tf.keras.layers.multiply()([w_5, w_7])
+        w_6 = tf.keras.layers.multiply()([w_6, w_8])
+        w_7 = tf.keras.layers.multiply()([w_7, w_1])
+        w_8 = tf.keras.layers.multiply()([w_8, old_w_2])
+        
+        res = tf.keras.layers.concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
+        
+        res = tf.keras.layers.Add()([res, x_x])
+        
+        res = tf.keras.layers.LayerNormalization()(res)
+        
+        return res
+        
+        
 
-    x_5 = tf.keras.layers.Dropout(top_dropoutrate)(x_5)
+    x_5 = mk_wires(x_5)
 
-    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_5)
+    x_5 = mk_wires(x_5)
 
-    x_5 = tf.keras.layers.Dropout(top_dropoutrate)(x_5)
+    x_5 = mk_wires(x_5)
 
-    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_5)
-
-    x_5 = tf.keras.layers.Dropout(top_dropoutrate)(x_5)
-
-    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_5)
+    x_5 = mk_wires(x_5)
 
     x_5 = keras.layers.ELU(alpha=0.3)(x_5)
 
