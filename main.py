@@ -441,11 +441,11 @@ def build_model(dp_rate = 0.5):
 
 
 
-old_model = tf.keras.models.load_model('cifar_model.4.64.keras')
+# old_model = tf.keras.models.load_model('cifar_model.4.64.keras')
 
 model = build_model(dp_rate=0.5)
 
-model.set_weights(old_model.get_weights())
+# model.set_weights(old_model.get_weights())
 
 opt = keras.optimizers.Adam(learning_rate=0.001)
 
