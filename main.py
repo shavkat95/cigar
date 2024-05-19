@@ -507,7 +507,7 @@ model = build_model(dp_rate=0.6)
 
 model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.SGD(learning_rate=0.000002, momentum=0.2)
+opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)
 
 model.compile(optimizer=opt, 
               loss='categorical_crossentropy',
@@ -524,7 +524,7 @@ model = build_model(dp_rate=0.6)
 
 model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.RMSprop(learning_rate=0.000003, momentum=0.2)
+opt = keras.optimizers.RMSprop(learning_rate=0.001, momentum=0.2)
 
 model.compile(optimizer=opt, 
               loss='categorical_crossentropy',
@@ -542,7 +542,7 @@ model = build_model(dp_rate=0.6)
 
 model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.RMSprop(learning_rate=0.000004, momentum=0.2)
+opt = keras.optimizers.RMSprop(learning_rate=0.001, momentum=0.2)
 
 model.compile(optimizer=opt, 
               loss='categorical_crossentropy',
