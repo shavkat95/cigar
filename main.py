@@ -403,7 +403,7 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Multiply()([w_7, w_1])
         w_8 = tf.keras.layers.Multiply()([w_8, old_w_2])
         
-        res = tf.keras.layers.concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
+        res = tf.keras.layers.Concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
         
         res = tf.keras.layers.Add()([res, x_x])
         
