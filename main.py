@@ -472,7 +472,7 @@ def build_model(dp_rate = 0.5):
 
 
 
-# old_model = tf.keras.models.load_model('cifar_model.4.64.keras')
+# old_model = tf.keras.models.load_model('cifar_model.keras')
 
 model = build_model(dp_rate=0.5)
 
