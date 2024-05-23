@@ -109,13 +109,12 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.ELU(alpha=0.8),
         tf.keras.layers.Conv3D(128, 4, (2,1,1))])(keras.layers.Add()([x_1, x_2]))
     max_pool_1 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_1_f)
-    avg_pool_1 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_1_f)
     x_1_f = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Concatenate()([max_pool_1, avg_pool_1]))
+    ])(max_pool_1)
 
     x_1_f = tf.keras.layers.Dense(110)(x_1_f)
 
@@ -125,13 +124,12 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.ELU(alpha=0.8),
         tf.keras.layers.Conv3D(128, 4, (2,1,1))])(keras.layers.Add()([x_2, x_3]))
     max_pool_2 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_2_f)
-    avg_pool_2 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_2_f)
     x_2_f = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Multiply()([max_pool_2, avg_pool_1]))
+    ])(max_pool_2)
 
     x_2_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_2_f, x_1_f]))
     
@@ -146,7 +144,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_3, avg_pool_2]))
+    ])(max_pool_3)
 
     x_3_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_1_f, x_3_f]))
     
@@ -170,13 +168,12 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.ELU(alpha=0.8),
         tf.keras.layers.Conv3D(128, 4, (2,1,1))])(keras.layers.Add()([x_5, x_6]))
     max_pool_5 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_5_f)
-    avg_pool_5 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_5_f)
     x_5_f = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_5, avg_pool_4]))
+    ])(keras.layers.Multiply()([max_pool_5, avg_pool_4]))
 
     x_5_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_5_f, x_3_f]))
     
@@ -185,13 +182,12 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.ELU(alpha=0.8),
         tf.keras.layers.Conv3D(128, 4, (2,1,1))])(keras.layers.Add()([x_6, x_7]))
     max_pool_6 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_6_f)
-    avg_pool_6 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_6_f)
     x_6_f = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_6, avg_pool_5]))
+    ])(max_pool_6)
 
     x_6_f = tf.keras.layers.Dense(110)(x_6_f)
     
@@ -206,7 +202,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dropout(dp_rate),
         tf.keras.layers.Dense(128),
         keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Multiply()([max_pool_7, avg_pool_6]))
+    ])(max_pool_7)
 
     x_7_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_7_f, x_5_f]))
     
