@@ -444,6 +444,14 @@ def build_model(dp_rate = 0.5):
 
     x_5 = mk_wires(x_5)
 
+    x_5 = mk_wires(x_5)
+
+    x_5 = mk_wires(x_5)
+
+    x_5 = mk_wires(x_5)
+
+    x_5 = mk_wires(x_5)
+
     x_5 = keras.layers.ELU(alpha=0.3)(x_5)
 
     x_5 = tf.keras.layers.Dense(256, use_bias=False)(x_5)
