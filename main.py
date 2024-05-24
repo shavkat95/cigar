@@ -399,14 +399,14 @@ def build_model(dp_rate = 0.5):
         w_7 = keras.layers.Activation(activations.tanh)(w_7)
         w_8 = keras.layers.ELU(alpha=0.125)(w_8)
 
-        w_1 = tf.keras.layers.Dense(64, use_bias=False)(w_1)
-        w_2 = tf.keras.layers.Dense(64, use_bias=False)(w_2)
-        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
-        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
-        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
-        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
-        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
-        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+        w_1 = tf.keras.layers.Dense(64, )(w_1)
+        w_2 = tf.keras.layers.Dense(64, )(w_2)
+        w_3 = tf.keras.layers.Dense(64, )(w_3)
+        w_4 = tf.keras.layers.Dense(64, )(w_4)
+        w_5 = tf.keras.layers.Dense(64, )(w_5)
+        w_6 = tf.keras.layers.Dense(64, )(w_6)
+        w_7 = tf.keras.layers.Dense(64, )(w_7)
+        w_8 = tf.keras.layers.Dense(64, )(w_8)
         
         res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
         
