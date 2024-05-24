@@ -26,6 +26,7 @@ from __future__ import annotations
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
+from keras import activations
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -361,15 +362,6 @@ def build_model(dp_rate = 0.5):
         if run == 1:
             x_x = tf.keras.layers.Concatenate()([old_w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
         
-        old_w_1 = keras.layers.ELU(alpha=0.5)(old_w_1)
-        w_2 = keras.layers.ELU(alpha=0.5)(w_2)
-        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
-        w_4 = keras.layers.ELU(alpha=0.5)(w_4)
-        w_5 = keras.layers.ELU(alpha=0.5)(w_5)
-        w_6 = keras.layers.ELU(alpha=0.5)(w_6)
-        w_7 = keras.layers.ELU(alpha=0.5)(w_7)
-        w_8 = keras.layers.ELU(alpha=0.5)(w_8)
-        
         w_1 = tf.keras.layers.Multiply()([old_w_1, w_2])
         old_w_2 = tf.keras.layers.Multiply()([w_2, w_3])
         w_3 = tf.keras.layers.Multiply()([w_3, w_4])
@@ -387,15 +379,7 @@ def build_model(dp_rate = 0.5):
         w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
         w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
         w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
-        
-        w_1 = keras.layers.ELU(alpha=0.5)(w_1)
-        old_w_2 = keras.layers.ELU(alpha=0.5)(old_w_2)
-        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
-        w_4 = keras.layers.ELU(alpha=0.5)(w_4)
-        w_5 = keras.layers.ELU(alpha=0.5)(w_5)
-        w_6 = keras.layers.ELU(alpha=0.5)(w_6)
-        w_7 = keras.layers.ELU(alpha=0.5)(w_7)
-        w_8 = keras.layers.ELU(alpha=0.5)(w_8)
+
         
         w_1 = tf.keras.layers.Multiply()([w_1, w_3])
         w_2 = tf.keras.layers.Multiply()([old_w_2, w_4])
@@ -405,6 +389,24 @@ def build_model(dp_rate = 0.5):
         w_6 = tf.keras.layers.Multiply()([w_6, w_8])
         w_7 = tf.keras.layers.Multiply()([w_7, w_1])
         w_8 = tf.keras.layers.Multiply()([w_8, old_w_2])
+
+        w_1 = keras.layers.Activation(activations.sigmoid)(w_1)
+        w_2 = keras.layers.ELU(alpha=0.5)(w_2)
+        w_3 = keras.layers.Activation(activations.softplus)(w_3)
+        w_4 = keras.layers.Activation(activations.softsign)(w_4)
+        w_5 = keras.layers.Activation(activations.selu)(w_5)
+        w_6 = keras.layers.Activation(activations.sigmoid)(w_6)
+        w_7 = keras.layers.Activation(activations.tanh)(w_7)
+        w_8 = keras.layers.ELU(alpha=0.125)(w_8)
+
+        w_1 = tf.keras.layers.Dense(64, use_bias=False)(w_1)
+        w_2 = tf.keras.layers.Dense(64, use_bias=False)(w_2)
+        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
         
         res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
         
@@ -462,7 +464,7 @@ def build_model(dp_rate = 0.5):
 
     model = keras.Model(inputs=img_inputs, outputs=outputs, name="cifar_model")
     
-    opt = keras.optimizers.RMSprop(learning_rate=0.0000001)
+    opt = keras.optimizers.RMSprop(learning_rate=0.001)
 
     model.compile(optimizer=opt, 
                 loss='categorical_crossentropy',
@@ -846,8 +848,113 @@ model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_
 
 model.save('cifar_model.keras')
 
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 
 
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+
+
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+old_model = tf.keras.models.load_model('cifar_model.keras')
+
+model = build_model(dp_rate=0.5)
+
+model.set_weights(old_model.get_weights())
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
 
 
 
