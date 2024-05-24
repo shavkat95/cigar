@@ -398,7 +398,17 @@ def build_model(dp_rate = 0.5):
         w_6 = keras.layers.Activation(activations.sigmoid)(w_6)
         w_7 = keras.layers.Activation(activations.tanh)(w_7)
         w_8 = keras.layers.ELU(alpha=0.125)(w_8)
-
+        
+        def mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
+            output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
+            i = 0
+            for layer in output_ls:
+                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (4*i)%64:(4*(i+1))%64], w_2[:, (4*i)%64:(4*(i+1))%64], w_3[:, (4*i)%64:(4*(i+1))%64], w_4[:, (4*i)%64:(4*(i+1))%64], w_5[:, (4*i)%64:(4*(i+1))%64], w_6[:, (4*i)%64:(4*(i+1))%64], w_7[:, (4*i)%64:(4*(i+1))%64], w_8[:, (4*i)%64:(4*(i+1))%64]])
+                i+=1
+            return output_ls
+        
+        [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8] = mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8)
+                
         w_1 = tf.keras.layers.Dense(64, )(w_1)
         w_2 = tf.keras.layers.Dense(64, )(w_2)
         w_3 = tf.keras.layers.Dense(64, )(w_3)
