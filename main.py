@@ -390,20 +390,20 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Multiply()([w_7, w_1])
         w_8 = tf.keras.layers.Multiply()([w_8, old_w_2])
 
-        w_1 = keras.layers.Activation(activations.sigmoid)(w_1)
-        w_2 = keras.layers.ELU(alpha=0.5)(w_2)
-        w_3 = keras.layers.Activation(activations.softplus)(w_3)
-        w_4 = keras.layers.Activation(activations.softsign)(w_4)
-        w_5 = keras.layers.Activation(activations.selu)(w_5)
-        w_6 = keras.layers.Activation(activations.sigmoid)(w_6)
-        w_7 = keras.layers.Activation(activations.tanh)(w_7)
-        w_8 = keras.layers.ELU(alpha=0.125)(w_8)
+        # w_1 = keras.layers.ELU(alpha=0.9)(w_1)
+        w_2 = keras.layers.ELU(alpha=0.7)(w_2)
+        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
+        w_4 = keras.layers.ELU(alpha=0.4)(w_4)
+        w_5 = keras.layers.ELU(alpha=0.3)(w_5)
+        w_6 = keras.layers.ELU(alpha=0.2)(w_6)
+        w_7 = keras.layers.ELU(alpha=0.1)(w_7)
+        w_8 = keras.layers.ELU(alpha=0.5)(w_8)
         
         def mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
             output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
             i = 0
             for layer in output_ls:
-                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (4*i)%64:(4*(i+1))%64], w_2[:, (4*i)%64:(4*(i+1))%64], w_3[:, (4*i)%64:(4*(i+1))%64], w_4[:, (4*i)%64:(4*(i+1))%64], w_5[:, (4*i)%64:(4*(i+1))%64], w_6[:, (4*i)%64:(4*(i+1))%64], w_7[:, (4*i)%64:(4*(i+1))%64], w_8[:, (4*i)%64:(4*(i+1))%64]])
+                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (8*i):(8*(i+1))], w_2[:, (8*i):(8*(i+1))], w_3[:, (8*i):(8*(i+1))], w_4[:, (8*i):(8*(i+1))], w_5[:, (8*i):(8*(i+1))], w_6[:, (8*i):(8*(i+1))], w_7[:, (8*i):(8*(i+1))], w_8[:, (8*i):(8*(i+1))]])
                 i+=1
             return output_ls
         
@@ -429,26 +429,6 @@ def build_model(dp_rate = 0.5):
         
 
     x_5 = mk_wires(x_5, run = 1)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
 
     x_5 = mk_wires(x_5)
 
