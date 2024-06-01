@@ -178,7 +178,6 @@ def build_model(dp_rate = 0.5):
             list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1))(list1[i])
             list1[i] = tf.keras.layers.Conv3D(768, 2, (1,1,1))(list1[i])
             list1[i] = tf.keras.layers.Conv3D(768, 2, (1,1,1))(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(1536, 2, (1,1,1))(list1[i])
             list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(list1[i])
             
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = list1
@@ -237,8 +236,8 @@ def build_model(dp_rate = 0.5):
         for x in [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]:
             x = tf.keras.layers.Flatten()(x)
             x_1 = []
-            for i in range(math.ceil(3072/512)):
-                x_1.append(mk_wires_1(x[:, (512*i):min(3072,(512*(i+1)))], dim = min(3072,(512*(i+1)))-(512*i)))
+            for i in range(math.ceil(4608/512)):
+                x_1.append(mk_wires_1(x[:, (512*i):min(4608,(512*(i+1)))], dim = min(4608,(512*(i+1)))-(512*i)))
             output_ls.append(tf.keras.layers.Concatenate()(x_1))
         return output_ls
     
@@ -247,8 +246,8 @@ def build_model(dp_rate = 0.5):
     list1 = [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f]
     
     for i in range(len(list1)):
-            list1[i] = tf.keras.layers.Reshape((1, 1, 2, 1536))(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(1536, (1, 1, 2), 1)(list1[i])
+            list1[i] = tf.keras.layers.Reshape((2, 2, 3, 768))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(1536, 2, 1)(list1[i])
             list1[i] = tf.keras.layers.Flatten()(list1[i])
             
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = list1
