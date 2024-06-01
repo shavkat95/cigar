@@ -247,7 +247,7 @@ def build_model(dp_rate = 0.5):
     
     for i in range(len(list1)):
             list1[i] = tf.keras.layers.Reshape((3, 3, 10, 96))(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(96, 2, 1)(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(96, 2, 2)(list1[i])
             list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(list1[i])
             list1[i] = tf.keras.layers.Flatten()(list1[i])
             
