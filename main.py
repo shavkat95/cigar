@@ -335,11 +335,9 @@ def build_model(dp_rate = 0.5):
 
     x_5 = keras.layers.Concatenate()([x_3_1, x_3_2])
 
-    x_5 = keras.layers.BatchNormalization()(x_5)
-
     x_5 = tf.keras.layers.Dense(1024)(x_5)
 
-    x_5 = keras.layers.Dropout(dp_rate)(x_5)
+    x_5 = keras.layers.BatchNormalization()(x_5)
 
     top_dropoutrate = dp_rate
     
@@ -463,9 +461,13 @@ def build_model(dp_rate = 0.5):
 
     x_5 = mk_wires(x_5)
 
+    x_5 = keras.layers.Dropout(top_dropoutrate)(x_5)
+
     x_5 = keras.layers.ELU(alpha=0.3)(x_5)
 
-    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_5)
+    x_5 = tf.keras.layers.Dense(512)(x_5)
+
+    x_5 = keras.layers.Dropout(top_dropoutrate)(x_5)
 
     x_5 = keras.layers.ELU(alpha=0.2)(x_5)
 
