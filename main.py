@@ -174,8 +174,9 @@ def build_model(dp_rate = 0.5):
     list1 = [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f]
     
     for i in range(len(list1)):
-            list1[i] = tf.keras.layers.Conv3D(384, 3, (1,1,1))(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(384, 3, (1,1,1))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1))(list1[i])
             list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(list1[i])
             
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = list1
