@@ -235,7 +235,6 @@ def build_model(dp_rate = 0.5):
     def wire_up(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
         output_ls = []
         for x in [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]:
-            x = tf.keras.layers.Reshape((1, 1,1))(x)
             x = tf.keras.layers.Flatten()(x)
             x_1 = []
             for i in range(math.ceil(4608/512)):
