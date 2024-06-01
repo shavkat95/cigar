@@ -170,7 +170,7 @@ def build_model(dp_rate = 0.5):
         return output_ls
     
     
-    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = mk_wires_0(x_1_f[:, :, :, :, :64], x_7_f, x_1_f[:, :, :, :, 64:], x_4_f[:, :, :, :, :64], x_2_f, x_6_f, x_4_f[:, :, :, :, 64:], x_8_f[:, :, :, :, :64], x_5_f[:, :, :, :, :64], x_8_f[:, :, :, :, 64:], x_5_f[:, :, :, :, 64:], x_3_f)
+    [x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8] = mk_wires_0(x_1_f[:, :, :, :, :64], x_7_f, x_1_f[:, :, :, :, 64:], x_4_f[:, :, :, :, :64], x_2_f, x_6_f, x_4_f[:, :, :, :, 64:], x_8_f[:, :, :, :, :64], x_5_f[:, :, :, :, :64], x_8_f[:, :, :, :, 64:], x_5_f[:, :, :, :, 64:], x_3_f)
     
     def mk_wires_1(x_x, dim = 512):
         
@@ -262,9 +262,13 @@ def build_model(dp_rate = 0.5):
             output_ls.append(tf.keras.layers.Concatenate()(x_1))
         return output_ls
     
-    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = wire_up(x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f)
+    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = wire_up(x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8)
     
     list1 = [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f]
+    list2 = [x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8]
+    
+    for i in range(len(list1)):
+            list1[i] = tf.keras.layers.Add()([list1[i], list2[i]])
     
     for i in range(len(list1)):
             list1[i] = tf.keras.layers.Reshape((3, 3, 10, 96))(list1[i])
