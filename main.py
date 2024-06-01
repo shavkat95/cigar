@@ -265,7 +265,6 @@ def build_model(dp_rate = 0.5):
 
     x_1 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -273,7 +272,6 @@ def build_model(dp_rate = 0.5):
     
     x_2 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -282,7 +280,6 @@ def build_model(dp_rate = 0.5):
     
     x_3 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -291,7 +288,6 @@ def build_model(dp_rate = 0.5):
     
     x_4 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -300,7 +296,6 @@ def build_model(dp_rate = 0.5):
     
     x_5 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -308,7 +303,6 @@ def build_model(dp_rate = 0.5):
 
     x_6 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
@@ -317,7 +311,6 @@ def build_model(dp_rate = 0.5):
     
     x_7 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization()
@@ -327,7 +320,6 @@ def build_model(dp_rate = 0.5):
     
     x_8 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
-        keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization()
