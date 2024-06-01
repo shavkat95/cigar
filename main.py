@@ -74,8 +74,7 @@ def build_model(dp_rate = 0.5):
             mod = tf.keras.Sequential([
                 tf.keras.layers.Conv2D(16, 3, 1),
                 tf.keras.layers.Conv2D(16, 3, 1),
-                tf.keras.layers.MaxPooling2D(2),
-                tf.keras.layers.Reshape((12, 12, 16, 1)),
+                tf.keras.layers.Reshape((24, 24, 16, 1)),
                 
             ])(im_inputs)
         elif run == 1:
@@ -106,58 +105,58 @@ def build_model(dp_rate = 0.5):
     
     
     x_1_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_1, x_2]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_1, x_2]))
     max_pool_1 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_1_f)
     avg_pool_1 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_1_f)
-    x_1_f = keras.layers.Concatenate()([max_pool_1, avg_pool_1]) # (3, 3, 10, 128)
+    x_1_f = keras.layers.Concatenate()([max_pool_1, avg_pool_1]) 
 
 
     x_2_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_2, x_3]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_2, x_3]))
     max_pool_2 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_2_f)
     avg_pool_2 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_2_f)
-    x_2_f = keras.layers.Add()([max_pool_2, avg_pool_1]) # (3, 3, 10, 64)
+    x_2_f = keras.layers.Add()([max_pool_2, avg_pool_1]) 
     
     x_3_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_3, x_4]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_3, x_4]))
     max_pool_3 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_3_f)
     avg_pool_3 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_3_f)
     x_3_f = keras.layers.Add()([max_pool_3, avg_pool_2])
     
     x_4_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_4, x_5]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_4, x_5]))
     max_pool_4 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_4_f)
     avg_pool_4 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_4_f)
     x_4_f = keras.layers.Concatenate()([max_pool_4, avg_pool_3])
     
     x_5_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_5, x_6]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_5, x_6]))
     max_pool_5 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_5_f)
     avg_pool_5 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_5_f)
     x_5_f = keras.layers.Concatenate()([max_pool_5, avg_pool_4])
     
     x_6_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_6, x_7]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_6, x_7]))
     max_pool_6 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_6_f)
     avg_pool_6 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_6_f)
     x_6_f = keras.layers.Add()([max_pool_6, avg_pool_5])
     
     x_7_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_7, x_8]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_7, x_8]))
     max_pool_7 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_7_f)
     avg_pool_7 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_7_f)
     x_7_f = keras.layers.Add()([max_pool_7, avg_pool_6])
     
     x_8_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
-        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_8, x_1]))
+        tf.keras.layers.Conv3D(64, 3, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1))])(keras.layers.Add()([x_8, x_1]))
     max_pool_8 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_8_f)
     x_8_f = keras.layers.Concatenate()([max_pool_8, avg_pool_7])
     
@@ -171,6 +170,16 @@ def build_model(dp_rate = 0.5):
     
     
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = mk_wires_0(x_1_f[:, :, :, :, :64], x_7_f, x_1_f[:, :, :, :, 64:], x_4_f[:, :, :, :, :64], x_2_f, x_6_f, x_4_f[:, :, :, :, 64:], x_8_f[:, :, :, :, :64], x_5_f[:, :, :, :, :64], x_8_f[:, :, :, :, 64:], x_5_f[:, :, :, :, 64:], x_3_f)
+    
+    list1 = [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f]
+    
+    for i in range(len(list1)):
+            list1[i] = tf.keras.layers.Conv3D(384, 3, (1,1,1))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 3, (1,1,1))(list1[i])
+            list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(list1[i])
+            
+    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = list1
+    
     
     def mk_wires_1(x_x, dim = 512):
         
@@ -236,8 +245,8 @@ def build_model(dp_rate = 0.5):
         for x in [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]:
             x = tf.keras.layers.Flatten()(x)
             x_1 = []
-            for i in range(math.ceil(8640/512)):
-                x_1.append(mk_wires_1(x[:, (512*i):min(8640,(512*(i+1)))], dim = min(8640,(512*(i+1)))-(512*i)))
+            for i in range(math.ceil(13824/512)):
+                x_1.append(mk_wires_1(x[:, (512*i):min(13824,(512*(i+1)))], dim = min(13824,(512*(i+1)))-(512*i)))
             output_ls.append(tf.keras.layers.Concatenate()(x_1))
         return output_ls
     
@@ -246,8 +255,8 @@ def build_model(dp_rate = 0.5):
     list1 = [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f]
     
     for i in range(len(list1)):
-            list1[i] = tf.keras.layers.Reshape((3, 3, 10, 96))(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(384, 2, 1)(list1[i])
+            list1[i] = tf.keras.layers.Reshape((3, 3, 4, 384))(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(1536, 2, 1)(list1[i])
             list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(list1[i])
             list1[i] = tf.keras.layers.Flatten()(list1[i])
             
