@@ -535,7 +535,7 @@ model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -548,7 +548,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')  # The file needs to end with the .keras extension
 
@@ -560,7 +560,7 @@ model.save('cifar_model.keras')  # The file needs to end with the .keras extensi
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -572,7 +572,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -585,22 +585,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
-
-model.save('cifar_model.keras')
-
-
-
-# old_model = tf.keras.models.load_model('cifar_model.keras')
-
-# model = build_model(dp_rate=0.5)
-
-# model.set_weights(old_model.get_weights())
-
-
-
-
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -615,7 +600,22 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+
+# old_model = tf.keras.models.load_model('cifar_model.keras')
+
+# model = build_model(dp_rate=0.5)
+
+# model.set_weights(old_model.get_weights())
+
+
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -629,7 +629,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -643,7 +643,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -657,7 +657,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -670,7 +670,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -683,7 +683,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -696,7 +696,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -709,7 +709,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -722,7 +722,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -735,7 +735,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -748,7 +748,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -761,7 +761,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -774,7 +774,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -787,7 +787,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -800,21 +800,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
-
-model.save('cifar_model.keras')
-
-
-# old_model = tf.keras.models.load_model('cifar_model.keras')
-
-# model = build_model(dp_rate=0.5)
-
-# model.set_weights(old_model.get_weights())
-
-
-
-
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -828,7 +814,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -842,7 +828,21 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+
+# old_model = tf.keras.models.load_model('cifar_model.keras')
+
+# model = build_model(dp_rate=0.5)
+
+# model.set_weights(old_model.get_weights())
+
+
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -858,7 +858,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
@@ -871,7 +871,7 @@ model.save('cifar_model.keras')
 
 
 
-model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=64, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
 
