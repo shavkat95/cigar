@@ -333,10 +333,13 @@ def build_model(dp_rate = 0.5):
 
     x_3_2 = keras.layers.Concatenate()([x_3_2, x_1_2])
 
-
-    x_5 = tf.keras.layers.Dense(1024)(keras.layers.Concatenate()([x_3_1, x_3_2]))
+    x_5 = keras.layers.Concatenate()([x_3_1, x_3_2])
 
     x_5 = keras.layers.BatchNormalization()(x_5)
+
+    x_5 = tf.keras.layers.Dense(1024)(x_5)
+
+    x_5 = keras.layers.Dropout(dp_rate)(x_5)
 
     top_dropoutrate = dp_rate
     
