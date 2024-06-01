@@ -247,7 +247,7 @@ def build_model(dp_rate = 0.5):
         
         res = tf.keras.layers.Add()([res, x_x])
         
-        res = tf.keras.layers.BatchNormalization()(res)
+        res = tf.keras.layers.LayerNormalization()(res)
         
         return res
     
@@ -269,6 +269,7 @@ def build_model(dp_rate = 0.5):
     
     for i in range(len(list1)):
             list1[i] = tf.keras.layers.Add()([list1[i], list2[i]])
+            list1[i] = tf.keras.layers.LayerNormalization()(list1[i])
     
     for i in range(len(list1)):
             list1[i] = tf.keras.layers.Reshape((3, 3, 10, 96))(list1[i])
