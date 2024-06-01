@@ -184,23 +184,14 @@ def build_model(dp_rate = 0.5):
     
     def mk_wires_1(x_x, dim = 512):
         
-        old_w_1 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_2 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_3 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_4 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_5 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_6 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_7 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        w_8 = tf.keras.layers.Dropout(dp_rate)(x_x)
-        
-        old_w_1 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(old_w_1)
-        w_2 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_2)
-        w_3 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_3)
-        w_4 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_4)
-        w_5 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_5)
-        w_6 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_6)
-        w_7 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_7)
-        w_8 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_8)
+        old_w_1 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_2 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_3 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_4 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_5 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_6 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_7 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
+        w_8 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(x_x)
         
         w_1 = tf.keras.layers.Add()([old_w_1, w_2])
         w_2 = tf.keras.layers.Add()([w_2, w_3])
@@ -230,9 +221,7 @@ def build_model(dp_rate = 0.5):
         
         [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8] = mk_more_wires_1(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8)
         
-        res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
-        
-        x_x = tf.keras.layers.Dropout(dp_rate)(x_x)
+        res = tf.keras.layers.Concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
         
         res = tf.keras.layers.Add()([res, x_x])
         
