@@ -268,14 +268,14 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(keras.layers.Concatenate()([x_1_f, x_7_f]))
+    ])(keras.layers.Add()([x_1_f, x_7_f]))
     
     x_2 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(tf.keras.layers.Concatenate()([x_2_f,x_8_f]))
+    ])(tf.keras.layers.Add()([x_2_f,x_8_f]))
 
     
     x_3 = tf.keras.Sequential([
@@ -283,7 +283,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(x_3_f)
+    ])(tf.keras.layers.Add()([x_3_f,x_1_f]))
     
     
     x_4 = tf.keras.Sequential([
@@ -291,7 +291,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(x_4_f)
+    ])(tf.keras.layers.Add()([x_4_f,x_2_f]))
     
     
     x_5 = tf.keras.Sequential([
@@ -299,14 +299,14 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(x_5_f)
+    ])(tf.keras.layers.Add()([x_5_f,x_3_f]))
 
     x_6 = tf.keras.Sequential([
         tf.keras.layers.Dense(256),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization(),
-    ])(x_6_f)
+    ])(tf.keras.layers.Add()([x_6_f,x_4_f]))
     
     
     x_7 = tf.keras.Sequential([
@@ -314,7 +314,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization()
-    ])(x_7_f)
+    ])(tf.keras.layers.Add()([x_7_f,x_5_f]))
 
     
     
@@ -323,7 +323,7 @@ def build_model(dp_rate = 0.5):
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
         keras.layers.BatchNormalization()
-    ])(x_8_f)
+    ])(tf.keras.layers.Add()([x_8_f,x_6_f]))
 
 
 
