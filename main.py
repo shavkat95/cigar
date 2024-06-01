@@ -20,13 +20,14 @@
 # - generator
 # - augmentation
 
-
-
 from __future__ import annotations
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from keras import activations
+
+import os
+import math
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -71,11 +72,9 @@ def build_model(dp_rate = 0.5):
     def build_cnn(im_inputs, run = 1):
         if run == 2:
             mod = tf.keras.Sequential([
-                tf.keras.layers.Conv2D(32, 3, 1),
-                tf.keras.layers.ELU(alpha=0.9),
-                tf.keras.layers.Conv2D(32, 3, 2),
-                tf.keras.layers.ELU(alpha=0.9),
-                tf.keras.layers.Reshape((12, 12, 32, 1)),
+                tf.keras.layers.Conv2D(16, 3, 1),
+                tf.keras.layers.Conv2D(16, 3, 1),
+                tf.keras.layers.Reshape((24, 24, 16, 1)),
                 
             ])(im_inputs)
         elif run == 1:
@@ -106,226 +105,292 @@ def build_model(dp_rate = 0.5):
     
     
     x_1_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_1, x_2]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_1, x_2]))
     max_pool_1 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_1_f)
     avg_pool_1 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_1_f)
-    x_1_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Concatenate()([max_pool_1, avg_pool_1]))
-
-    x_1_f = tf.keras.layers.Dense(110)(x_1_f)
+    x_1_f = keras.layers.Concatenate()([max_pool_1, avg_pool_1]) # (9, 9, 10, 128)
 
 
     x_2_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_2, x_3]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_2, x_3]))
     max_pool_2 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_2_f)
     avg_pool_2 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_2_f)
-    x_2_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_2, avg_pool_1]))
-
-    x_2_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_2_f, x_1_f]))
+    x_2_f = keras.layers.Add()([max_pool_2, avg_pool_1]) # (9, 9, 10, 64)
     
     x_3_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_3, x_4]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_3, x_4]))
     max_pool_3 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_3_f)
     avg_pool_3 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_3_f)
-    x_3_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_3, avg_pool_2]))
-
-    x_3_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_1_f, x_3_f]))
+    x_3_f = keras.layers.Add()([max_pool_3, avg_pool_2])
     
     x_4_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_4, x_5]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_4, x_5]))
     max_pool_4 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_4_f)
     avg_pool_4 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_4_f)
-    x_4_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_4, avg_pool_3]))
-
-    x_4_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_4_f, x_2_f]))
+    x_4_f = keras.layers.Concatenate()([max_pool_4, avg_pool_3])
     
     x_5_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_5, x_6]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_5, x_6]))
     max_pool_5 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_5_f)
     avg_pool_5 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_5_f)
-    x_5_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_5, avg_pool_4]))
-
-    x_5_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_5_f, x_3_f]))
+    x_5_f = keras.layers.Concatenate()([max_pool_5, avg_pool_4])
     
     x_6_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_6, x_7]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_6, x_7]))
     max_pool_6 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_6_f)
     avg_pool_6 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_6_f)
-    x_6_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_6, avg_pool_5]))
-
-    x_6_f = tf.keras.layers.Dense(110)(x_6_f)
+    x_6_f = keras.layers.Add()([max_pool_6, avg_pool_5])
     
     x_7_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_7, x_8]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_7, x_8]))
     max_pool_7 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_7_f)
     avg_pool_7 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_7_f)
-    x_7_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Add()([max_pool_7, avg_pool_6]))
-
-    x_7_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_7_f, x_5_f]))
+    x_7_f = keras.layers.Add()([max_pool_7, avg_pool_6])
     
     x_8_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(128, 4, (1,1,2)),
-        tf.keras.layers.Conv3D(128, 4, (2,1,2))])(keras.layers.Add()([x_8, x_1]))
+        tf.keras.layers.Conv3D(64, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(64, 4, (1,1,1))])(keras.layers.Add()([x_8, x_1]))
     max_pool_8 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_8_f)
-    x_8_f = tf.keras.Sequential([
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(128),
-        keras.layers.ELU(alpha=0.8),
-    ])(keras.layers.Concatenate()([max_pool_8, avg_pool_7]))
+    x_8_f = keras.layers.Concatenate()([max_pool_8, avg_pool_7])
+    
+    def mk_wires_0(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8, w_9, w_10, w_11, w_12):
+        output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
+        i = 0
+        for layer in output_ls:
+            output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, :, :, :, (8*i):(8*(i+1))], w_2[:, :, :, :, (8*i):(8*(i+1))], w_3[:, :, :, :, (8*i):(8*(i+1))], w_4[:, :, :, :, (8*i):(8*(i+1))], w_5[:, :, :, :, (8*i):(8*(i+1))], w_6[:, :, :, :, (8*i):(8*(i+1))], w_7[:, :, :, :, (8*i):(8*(i+1))], w_8[:, :, :, :, (8*i):(8*(i+1))], w_9[:, :, :, :, (8*i):(8*(i+1))], w_10[:, :, :, :, (8*i):(8*(i+1))], w_11[:, :, :, :, (8*i):(8*(i+1))], w_12[:, :, :, :, (8*i):(8*(i+1))]])
+            i+=1
+        return output_ls
+    
+    # (9, 9, 10, 96)
+    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = mk_wires_0(x_1_f[:, :, :, :, :64], x_7_f, x_1_f[:, :, :, :, 64:], x_4_f[:, :, :, :, :64], x_2_f, x_6_f, x_4_f[:, :, :, :, 64:], x_8_f[:, :, :, :, :64], x_5_f[:, :, :, :, :64], x_8_f[:, :, :, :, 64:], x_5_f[:, :, :, :, 64:], x_3_f)
+    
+    def mk_wires_1(x_x, dim = 512, run = -1):
+        
+        old_w_1 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_2 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_3 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_4 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_5 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_6 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_7 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        w_8 = tf.keras.layers.Dropout(dp_rate)(x_x)
+        
+        old_w_1 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(old_w_1)
+        w_2 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_2)
+        w_3 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(int(dim/8), use_bias=False)(w_8)
+        
+        w_1 = tf.keras.layers.Add()([old_w_1, w_2])
+        w_2 = tf.keras.layers.Add()([w_2, w_3])
+        w_3 = tf.keras.layers.Add()([w_3, w_4])
+        w_4 = tf.keras.layers.Add()([w_4, w_5])
+        w_5 = tf.keras.layers.Add()([w_5, w_6])
+        w_6 = tf.keras.layers.Add()([w_6, w_7])
+        w_7 = tf.keras.layers.Add()([w_7, w_8])
+        w_8 = tf.keras.layers.Add()([w_8, old_w_1])
 
-    x_8_f = tf.keras.layers.Dense(110)(keras.layers.Concatenate()([x_8_f, x_6_f]))
+        w_1 = keras.layers.ReLU()(w_1)
+        w_2 = keras.layers.ELU(alpha=0.7)(w_2)
+        w_3 = keras.layers.ELU(alpha=0.5)(w_3)
+        w_4 = keras.layers.ELU(alpha=0.4)(w_4)
+        w_5 = keras.layers.ELU(alpha=0.3)(w_5)
+        w_6 = keras.layers.ELU(alpha=0.2)(w_6)
+        w_7 = keras.layers.ELU(alpha=0.1)(w_7)
+        # w_8 = keras.layers.ELU(alpha=0.5)(w_8)
+        
+        def mk_more_wires_1(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
+            output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
+            i = 0
+            for layer in output_ls:
+                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_2[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_3[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_4[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_5[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_6[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_7[:, (int(dim/64)*i):(int(dim/64)*(i+1))], w_8[:, (int(dim/64)*i):(int(dim/64)*(i+1))]])
+                i+=1
+            return output_ls
+        
+        [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8] = mk_more_wires_1(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8)
+        
+        res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
+        
+        x_x = tf.keras.layers.Dropout(dp_rate)(x_x)
+        
+        res = tf.keras.layers.Add()([res, x_x])
+        
+        res = tf.keras.layers.BatchNormalization()(res)
+        
+        return res
+    
+    
+    def wire_up(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
+        output_ls = []
+        for x in [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]:
+            x = tf.keras.layers.Flatten()(x)
+            x_1 = []
+            for i in range(math.ceil(77760/512)):
+                x_1.append(mk_wires_1(x[:, (512*i):min(77760,(512*(i+1)))], dim = min(77760,(512*(i+1)))-(512*i)))
+            output_ls.append(tf.keras.layers.Concatenate()(x_1))
+        return output_ls
+    
+    [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = wire_up(x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f)
+    
+    
+    x_1_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_1_f)
+    x_1_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_1_f)
+    
+    x_2_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_2_f)
+    x_2_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_2_f)
+    
+    x_3_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_3_f)
+    x_3_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_3_f)
+    
+    x_4_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_4_f)
+    x_4_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_4_f)
+    
+    x_5_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_5_f)
+    x_5_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_5_f)
+    
+    x_6_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_6_f)
+    x_6_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_6_f)
+    
+    x_7_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_7_f)
+    x_7_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_7_f)
+    
+    x_8_f = tf.keras.Sequential([
+        tf.keras.layers.Reshape((9, 9, 10, 96)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1)),
+        tf.keras.layers.Conv3D(96, 4, (1,1,1))])(x_8_f)
+    x_8_f = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(x_8_f)
+    
+    
 
     x_1 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(keras.layers.Concatenate()([x_1_f, x_7_f]))
-
-    x_1 = tf.keras.layers.Concatenate()([x_1,x_6_f])
-    x_1 = keras.layers.BatchNormalization()(x_1)
     
     x_2 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(tf.keras.layers.Concatenate()([x_2_f,x_8_f]))
-
-    x_2 = keras.layers.BatchNormalization()(x_2)
 
     
     x_3 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(x_3_f)
-
-    x_3 = tf.keras.layers.Concatenate()([x_3,x_1_f])
-    x_3 = keras.layers.BatchNormalization()(x_3)
     
     
     x_4 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(x_4_f)
-
-    x_4 = tf.keras.layers.Concatenate()([x_4,x_2_f])
-    x_4 = keras.layers.BatchNormalization()(x_4)
     
     
     x_5 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(x_5_f)
 
-    x_5 = tf.keras.layers.Concatenate()([x_5,x_3_f])
-    x_5 = keras.layers.BatchNormalization()(x_5)
-
     x_6 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization(),
     ])(x_6_f)
-
-    x_6 = tf.keras.layers.Concatenate()([x_6,x_4_f])
-    x_6 = keras.layers.BatchNormalization()(x_6)
     
     
     x_7 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
-        keras.layers.ELU(alpha=0.7)
+        tf.keras.layers.Dense(256),
+        keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization()
     ])(x_7_f)
-
-
-    x_7 = tf.keras.layers.Concatenate()([x_7,x_5_f])
-    x_7 = keras.layers.BatchNormalization()(x_7)
 
     
     
     x_8 = tf.keras.Sequential([
-        tf.keras.layers.Dense(100),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
-        tf.keras.layers.Dense(100),
-        keras.layers.ELU(alpha=0.7)
+        tf.keras.layers.Dense(256),
+        keras.layers.ELU(alpha=0.7),
+        keras.layers.BatchNormalization()
     ])(x_8_f)
 
 
 
-    x_8 = tf.keras.layers.Concatenate()([x_8,x_6_f])
+    x_1_1 =tf.keras.layers.Dense(256)(keras.layers.Concatenate()([x_1, x_2]))
 
-    x_8 = keras.layers.BatchNormalization()(x_8)
+    x_1_2 = tf.keras.layers.Dense(256)(keras.layers.Concatenate()([x_3, x_4]))
 
+    x_2_1 =tf.keras.layers.Dense(256, activation='sigmoid')(keras.layers.Add()([x_1_1, x_1_2]))
 
+    x_2_2 =tf.keras.layers.Dense(256, activation='sigmoid')(keras.layers.Add()([x_5, x_6]))
 
-    x_1_1 =tf.keras.layers.Dense(128)(keras.layers.Concatenate()([x_1, x_2]))
-
-    x_1_2 = tf.keras.layers.Dense(128)(keras.layers.Concatenate()([x_3, x_4]))
-
-    x_2_1 =tf.keras.layers.Dense(128, activation='sigmoid')(keras.layers.Add()([x_1_1, x_1_2]))
-
-    x_2_2 =tf.keras.layers.Dense(128, activation='sigmoid')(keras.layers.Add()([x_5, x_6]))
-
-    x_3_1 =tf.keras.layers.Dense(256)(keras.layers.Concatenate()([x_2_1, x_7]))
+    x_3_1 =tf.keras.layers.Dense(512)(keras.layers.Concatenate()([x_2_1, x_7]))
 
     x_3_1 = keras.layers.Concatenate()([x_3_1, x_1_1])
 
-    x_3_2 =tf.keras.layers.Dense(256)(keras.layers.Concatenate()([x_2_2, x_8]))
+    x_3_2 =tf.keras.layers.Dense(512)(keras.layers.Concatenate()([x_2_2, x_8]))
 
     x_3_2 = keras.layers.Concatenate()([x_3_2, x_1_2])
 
 
-    x_5 = tf.keras.layers.Dense(512)(keras.layers.Concatenate()([x_3_1, x_3_2]))
+    x_5 = tf.keras.layers.Dense(1024)(keras.layers.Concatenate()([x_3_1, x_3_2]))
 
     x_5 = keras.layers.BatchNormalization()(x_5)
 
@@ -342,14 +407,14 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
         w_8 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
         
-        old_w_1 = tf.keras.layers.Dense(64, use_bias=False)(old_w_1)
-        w_2 = tf.keras.layers.Dense(64, use_bias=False)(w_2)
-        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
-        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
-        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
-        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
-        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
-        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+        old_w_1 = tf.keras.layers.Dense(128, use_bias=False)(old_w_1)
+        w_2 = tf.keras.layers.Dense(128, use_bias=False)(w_2)
+        w_3 = tf.keras.layers.Dense(128, use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(128, use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(128, use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(128, use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(128, use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(128, use_bias=False)(w_8)
         
         w_1 = tf.keras.layers.Add()([old_w_1, w_2])
         old_w_2 = tf.keras.layers.Add()([w_2, w_3])
@@ -360,14 +425,14 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Add()([w_7, w_8])
         w_8 = tf.keras.layers.Add()([w_8, old_w_1])
         
-        w_1 = tf.keras.layers.Dense(64, use_bias=False)(w_1)
-        old_w_2 = tf.keras.layers.Dense(64, use_bias=False)(old_w_2)
-        w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
-        w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
-        w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
-        w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
-        w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
-        w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+        w_1 = tf.keras.layers.Dense(128, use_bias=False)(w_1)
+        old_w_2 = tf.keras.layers.Dense(128, use_bias=False)(old_w_2)
+        w_3 = tf.keras.layers.Dense(128, use_bias=False)(w_3)
+        w_4 = tf.keras.layers.Dense(128, use_bias=False)(w_4)
+        w_5 = tf.keras.layers.Dense(128, use_bias=False)(w_5)
+        w_6 = tf.keras.layers.Dense(128, use_bias=False)(w_6)
+        w_7 = tf.keras.layers.Dense(128, use_bias=False)(w_7)
+        w_8 = tf.keras.layers.Dense(128, use_bias=False)(w_8)
 
         
         w_1 = tf.keras.layers.Add()([w_1, w_3])
@@ -392,20 +457,20 @@ def build_model(dp_rate = 0.5):
             output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
             i = 0
             for layer in output_ls:
-                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (8*i):(8*(i+1))], w_2[:, (8*i):(8*(i+1))], w_3[:, (8*i):(8*(i+1))], w_4[:, (8*i):(8*(i+1))], w_5[:, (8*i):(8*(i+1))], w_6[:, (8*i):(8*(i+1))], w_7[:, (8*i):(8*(i+1))], w_8[:, (8*i):(8*(i+1))]])
+                output_ls[i] = tf.keras.layers.Concatenate()([w_1[:, (16*i):(16*(i+1))], w_2[:, (16*i):(16*(i+1))], w_3[:, (16*i):(16*(i+1))], w_4[:, (16*i):(16*(i+1))], w_5[:, (16*i):(16*(i+1))], w_6[:, (16*i):(16*(i+1))], w_7[:, (16*i):(16*(i+1))], w_8[:, (16*i):(16*(i+1))]])
                 i+=1
             return output_ls
         
         [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8] = mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8)
                 
-        w_1 = tf.keras.layers.Dense(64, )(w_1)
-        w_2 = tf.keras.layers.Dense(64, )(w_2)
-        w_3 = tf.keras.layers.Dense(64, )(w_3)
-        w_4 = tf.keras.layers.Dense(64, )(w_4)
-        w_5 = tf.keras.layers.Dense(64, )(w_5)
-        w_6 = tf.keras.layers.Dense(64, )(w_6)
-        w_7 = tf.keras.layers.Dense(64, )(w_7)
-        w_8 = tf.keras.layers.Dense(64, )(w_8)
+        w_1 = tf.keras.layers.Dense(128, )(w_1)
+        w_2 = tf.keras.layers.Dense(128, )(w_2)
+        w_3 = tf.keras.layers.Dense(128, )(w_3)
+        w_4 = tf.keras.layers.Dense(128, )(w_4)
+        w_5 = tf.keras.layers.Dense(128, )(w_5)
+        w_6 = tf.keras.layers.Dense(128, )(w_6)
+        w_7 = tf.keras.layers.Dense(128, )(w_7)
+        w_8 = tf.keras.layers.Dense(128, )(w_8)
         
         res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
         
@@ -419,14 +484,14 @@ def build_model(dp_rate = 0.5):
             w_7 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
             w_8 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
             
-            w_1 = tf.keras.layers.Dense(64, use_bias=False)(w_1)
-            w_2 = tf.keras.layers.Dense(64, use_bias=False)(w_2)
-            w_3 = tf.keras.layers.Dense(64, use_bias=False)(w_3)
-            w_4 = tf.keras.layers.Dense(64, use_bias=False)(w_4)
-            w_5 = tf.keras.layers.Dense(64, use_bias=False)(w_5)
-            w_6 = tf.keras.layers.Dense(64, use_bias=False)(w_6)
-            w_7 = tf.keras.layers.Dense(64, use_bias=False)(w_7)
-            w_8 = tf.keras.layers.Dense(64, use_bias=False)(w_8)
+            w_1 = tf.keras.layers.Dense(128, use_bias=False)(w_1)
+            w_2 = tf.keras.layers.Dense(128, use_bias=False)(w_2)
+            w_3 = tf.keras.layers.Dense(128, use_bias=False)(w_3)
+            w_4 = tf.keras.layers.Dense(128, use_bias=False)(w_4)
+            w_5 = tf.keras.layers.Dense(128, use_bias=False)(w_5)
+            w_6 = tf.keras.layers.Dense(128, use_bias=False)(w_6)
+            w_7 = tf.keras.layers.Dense(128, use_bias=False)(w_7)
+            w_8 = tf.keras.layers.Dense(128, use_bias=False)(w_8)
         
             x_x = tf.keras.layers.Concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
         
@@ -450,13 +515,9 @@ def build_model(dp_rate = 0.5):
 
     x_5 = mk_wires(x_5)
 
-    x_5 = mk_wires(x_5)
-
-    x_5 = mk_wires(x_5)
-
     x_5 = keras.layers.ELU(alpha=0.3)(x_5)
 
-    x_5 = tf.keras.layers.Dense(256, use_bias=False)(x_5)
+    x_5 = tf.keras.layers.Dense(512, use_bias=False)(x_5)
 
     x_5 = keras.layers.ELU(alpha=0.2)(x_5)
 
