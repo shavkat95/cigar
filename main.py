@@ -50,6 +50,12 @@ def unison_shuffled_copies(a, b):
     p = np.random.permutation(len(a))
     return (a[p], b[p])
 
+print('\n img_train.shape: ')
+print(x_train.shape)
+
+print('\n img_train[0].shape: ')
+print(x_train[0].shape)
+
 (x_train, y_train) = unison_shuffled_copies(x_train, y_train)
 
 x_train, x_test = x_train/255, x_test/255
@@ -155,8 +161,6 @@ def build_model(dp_rate = 0.5):
     x_8_f = keras.layers.Concatenate()([max_pool_8, avg_pool_7])
     
     def mk_wires_0(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8, w_9, w_10, w_11, w_12):
-        print('mk_wires_0')
-
         output_ls = [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]
         i = 0
         for layer in output_ls:
@@ -168,8 +172,6 @@ def build_model(dp_rate = 0.5):
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = mk_wires_0(x_1_f[:, :, :, :, :64], x_7_f, x_1_f[:, :, :, :, 64:], x_4_f[:, :, :, :, :64], x_2_f, x_6_f, x_4_f[:, :, :, :, 64:], x_8_f[:, :, :, :, :64], x_5_f[:, :, :, :, :64], x_8_f[:, :, :, :, 64:], x_5_f[:, :, :, :, 64:], x_3_f)
     
     def mk_wires_1(x_x, dim = 512, run = -1):
-
-        print('mk_wires_1')
         
         old_w_1 = tf.keras.layers.Dropout(dp_rate)(x_x)
         w_2 = tf.keras.layers.Dropout(dp_rate)(x_x)
@@ -229,7 +231,6 @@ def build_model(dp_rate = 0.5):
     
     
     def wire_up(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
-        print('3D wiring')
         output_ls = []
         for x in [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8]:
             x = tf.keras.layers.Flatten()(x)
@@ -294,7 +295,7 @@ def build_model(dp_rate = 0.5):
 
     x_1 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -303,7 +304,7 @@ def build_model(dp_rate = 0.5):
     
     x_2 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -313,7 +314,7 @@ def build_model(dp_rate = 0.5):
     
     x_3 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -323,7 +324,7 @@ def build_model(dp_rate = 0.5):
     
     x_4 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -333,7 +334,7 @@ def build_model(dp_rate = 0.5):
     
     x_5 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -342,7 +343,7 @@ def build_model(dp_rate = 0.5):
 
     x_6 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -352,7 +353,7 @@ def build_model(dp_rate = 0.5):
     
     x_7 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -363,7 +364,7 @@ def build_model(dp_rate = 0.5):
     
     x_8 = tf.keras.Sequential([
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256),
+        tf.keras.layers.Dense(512),
         keras.layers.ELU(alpha=0.7),
         tf.keras.layers.Dense(256),
         keras.layers.ELU(alpha=0.7),
@@ -396,8 +397,7 @@ def build_model(dp_rate = 0.5):
     top_dropoutrate = dp_rate
     
     def mk_wires(x_x, run = -1):
-
-        print('making top wires')
+        
         
         old_w_1 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
         w_2 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
@@ -526,11 +526,11 @@ def build_model(dp_rate = 0.5):
 
     model = keras.Model(inputs=img_inputs, outputs=outputs, name="cifar_model")
     
-    opt = keras.optimizers.RMSprop(learning_rate=0.001)
+    # opt = keras.optimizers.RMSprop(learning_rate=0.001)
 
-    model.compile(optimizer=opt, 
-                loss='categorical_crossentropy',
-                metrics=['accuracy'])
+    # model.compile(optimizer=opt, 
+    #             loss='categorical_crossentropy',
+    #             metrics=['accuracy'])
     
     return model
 
@@ -542,11 +542,7 @@ model = build_model(dp_rate=0.5)
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 print('model.summary(): ')
@@ -575,6 +571,12 @@ my_callbacks = [
     CustomCallback()
 ]
 
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
 
 model.save('cifar_model.keras')
@@ -585,11 +587,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -602,11 +600,6 @@ model.save('cifar_model.keras')  # The file needs to end with the .keras extensi
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)
-
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -619,11 +612,6 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.RMSprop(learning_rate=0.001, momentum=0.2)
-
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -637,11 +625,6 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)
-
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -656,11 +639,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -675,11 +654,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -693,11 +668,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -711,11 +682,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -729,11 +696,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -746,11 +709,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -763,11 +722,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -780,11 +735,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -797,11 +748,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -814,11 +761,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -831,11 +774,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -848,11 +787,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -865,11 +800,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -882,11 +813,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -899,11 +826,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -916,11 +839,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -934,11 +853,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -952,11 +867,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -970,11 +881,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -990,11 +897,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
@@ -1007,11 +910,7 @@ model.save('cifar_model.keras')
 
 # model.set_weights(old_model.get_weights())
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
 
-model.compile(optimizer=opt, 
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
 
 model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=16, validation_data=(x_test, y_test), epochs=1)
