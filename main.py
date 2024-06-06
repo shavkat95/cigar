@@ -36,7 +36,7 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 def custom_activation(x):
-    return keras.ops.tanh(x) + x
+    return keras.ops.tanh(x) * tf.math.abs(x) 
 
 get_custom_objects().update({'custom_activation': Activation(custom_activation)})
 
@@ -495,9 +495,9 @@ def build_model(dp_rate = 0.5):
 
 
 
-model = tf.keras.models.load_model('cifar_model.keras')
+# model = tf.keras.models.load_model('cifar_model.keras')
 
-# model = build_model(dp_rate=0.5)
+model = build_model(dp_rate=0.5)
 
 # model.set_weights(old_model.get_weights())
 
