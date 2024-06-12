@@ -506,7 +506,7 @@ def build_model(dp_rate = 0.5):
 
 
 
-# old_model = tf.keras.models.load_model('cifar_model.keras')
+old_model = tf.keras.models.load_model('cifar_model.keras')
 
 # model = build_model()
 
@@ -514,7 +514,7 @@ def build_model(dp_rate = 0.5):
 
 model = tf.keras.models.load_model('cifar_model.keras', custom_objects={'custom_leaky_1':custom_leaky_1, "custom_activation": custom_activation})
 
-# model.set_weights(old_model.get_weights())
+model.set_weights(old_model.get_weights())
 
 print('\n \n \n ')
 
