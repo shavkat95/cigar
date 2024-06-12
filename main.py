@@ -38,14 +38,14 @@ ssl._create_default_https_context = ssl._create_unverified_context
 from keras import backend as K
 
 def custom_activation(x):
-    return K.tanh(x) * K.abs(x) 
+    return tf.math.tanh(x) * tf.math.abs(x) 
 
-def custom_leaky_1(x):
+def custom_leaky(x):
     return keras.activations.leaky_relu(x, negative_slope=0.81)
 
 
 get_custom_objects().update({'custom_activation': Activation(custom_activation)})
-get_custom_objects().update({'custom_leaky_1': Activation(custom_leaky_1)})
+get_custom_objects().update({'custom_leaky': Activation(custom_leaky)})
 
 def shapes(*x):
     for idx, item in enumerate(x):
@@ -86,15 +86,15 @@ def build_model(dp_rate = 0.5):
     def build_cnn(im_inputs, run = 1):
         if run == 2:
             mod = tf.keras.Sequential([
-                tf.keras.layers.Conv2D(16, 3, 1, activation=custom_leaky_1),
+                tf.keras.layers.Conv2D(16, 3, 1, activation=custom_leaky),
                 tf.keras.layers.Conv2D(16, 3, 1, activation=custom_activation),
                 tf.keras.layers.Reshape((24, 24, 16, 1)),
                 
             ])(im_inputs)
         elif run == 1:
             mod = tf.keras.Sequential([
-                tf.keras.layers.Conv2D(16, 3, 1, activation=custom_leaky_1),
-                tf.keras.layers.Conv2D(16, 3, activation=custom_leaky_1)
+                tf.keras.layers.Conv2D(16, 3, 1, activation=custom_leaky),
+                tf.keras.layers.Conv2D(16, 3, activation=custom_leaky)
             ])(im_inputs)
         return mod
     
@@ -119,7 +119,7 @@ def build_model(dp_rate = 0.5):
     
     
     x_1_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_1, x_2]))
     max_pool_1 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_1_f)
     avg_pool_1 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_1_f)
@@ -127,49 +127,49 @@ def build_model(dp_rate = 0.5):
 
 
     x_2_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_2, x_3]))
     max_pool_2 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_2_f)
     avg_pool_2 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_2_f)
     x_2_f = keras.layers.Add()([max_pool_2, avg_pool_1]) 
     
     x_3_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_3, x_4]))
     max_pool_3 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_3_f)
     avg_pool_3 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_3_f)
     x_3_f = keras.layers.Add()([max_pool_3, avg_pool_2])
     
     x_4_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_4, x_5]))
     max_pool_4 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_4_f)
     avg_pool_4 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_4_f)
     x_4_f = keras.layers.Concatenate()([max_pool_4, avg_pool_3])
     
     x_5_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_5, x_6]))
     max_pool_5 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_5_f)
     avg_pool_5 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_5_f)
     x_5_f = keras.layers.Concatenate()([max_pool_5, avg_pool_4])
     
     x_6_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_6, x_7]))
     max_pool_6 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_6_f)
     avg_pool_6 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_6_f)
     x_6_f = keras.layers.Add()([max_pool_6, avg_pool_5])
     
     x_7_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_7, x_8]))
     max_pool_7 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_7_f)
     avg_pool_7 = tf.keras.layers.AveragePooling3D(pool_size=(2, 2, 1))(x_7_f)
     x_7_f = keras.layers.Add()([max_pool_7, avg_pool_6])
     
     x_8_f = tf.keras.Sequential([
-        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky_1),
+        tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_leaky),
         tf.keras.layers.Conv3D(64, 3, (1,1,1), activation=custom_activation)])(keras.layers.Add()([x_8, x_1]))
     max_pool_8 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(x_8_f)
     x_8_f = keras.layers.Concatenate()([max_pool_8, avg_pool_7])
@@ -189,11 +189,11 @@ def build_model(dp_rate = 0.5):
     
     for i in range(len(list1)):
             list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_activation)(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky_1)(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky)(list1[i])
             list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_activation)(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky_1)(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky)(list1[i])
             list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_activation)(list1[i])
-            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky_1)(list1[i])
+            list1[i] = tf.keras.layers.Conv3D(384, 2, (1,1,1), activation=custom_leaky)(list1[i])
             list1[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(list1[i])
             
     [x_1_f, x_2_f, x_3_f, x_4_f, x_5_f, x_6_f, x_7_f, x_8_f] = list1
@@ -202,13 +202,13 @@ def build_model(dp_rate = 0.5):
     def mk_wires_1(x_x, dim = 512, i = -1):
         
         old_w_1 = tf.keras.layers.Dense(int(dim/8), activation=custom_activation)(x_x)
-        w_2 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky_1)(x_x)
+        w_2 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky)(x_x)
         w_3 = tf.keras.layers.Dense(int(dim/8), activation=custom_activation)(x_x)
-        w_4 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky_1)(x_x)
+        w_4 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky)(x_x)
         w_5 = tf.keras.layers.Dense(int(dim/8), activation=custom_activation)(x_x)
-        w_6 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky_1)(x_x)
+        w_6 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky)(x_x)
         w_7 = tf.keras.layers.Dense(int(dim/8), activation=custom_activation)(x_x)
-        w_8 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky_1)(x_x)
+        w_8 = tf.keras.layers.Dense(int(dim/8), activation=custom_leaky)(x_x)
         
         w_1 = tf.keras.layers.Add()([old_w_1, w_2])
         w_2 = tf.keras.layers.Add()([w_2, w_3])
@@ -220,23 +220,23 @@ def build_model(dp_rate = 0.5):
         w_8 = tf.keras.layers.Add()([w_8, old_w_1])
 
         if i%3 == 1:
-            w_1 = keras.layers.Activation(custom_leaky_1)(w_1)
+            w_1 = keras.layers.Activation(custom_leaky)(w_1)
             w_2 = keras.layers.Activation(custom_activation)(w_2)
-            w_3 = keras.layers.Activation(custom_leaky_1)(w_3)
-            w_4 = keras.layers.Activation(custom_leaky_1)(w_4)
+            w_3 = keras.layers.Activation(custom_leaky)(w_3)
+            w_4 = keras.layers.Activation(custom_leaky)(w_4)
             w_5 = keras.layers.Activation(custom_activation)(w_5)
-            w_6 = keras.layers.Activation(custom_leaky_1)(w_6)
+            w_6 = keras.layers.Activation(custom_leaky)(w_6)
             w_7 = keras.layers.Activation(custom_activation)(w_7)
-            w_8 = keras.layers.Activation(custom_leaky_1)(w_8)
+            w_8 = keras.layers.Activation(custom_leaky)(w_8)
 
         else:
-            w_1 = keras.layers.Activation(custom_leaky_1)(w_1)
+            w_1 = keras.layers.Activation(custom_leaky)(w_1)
             w_2 = keras.layers.Activation(custom_activation)(w_2)
-            w_3 = keras.layers.Activation(custom_leaky_1)(w_3)
+            w_3 = keras.layers.Activation(custom_leaky)(w_3)
             w_4 = keras.layers.Activation(custom_activation)(w_4)
-            w_5 = keras.layers.Activation(custom_leaky_1)(w_5)
+            w_5 = keras.layers.Activation(custom_leaky)(w_5)
             w_6 = keras.layers.Activation(custom_activation)(w_6)
-            w_7 = keras.layers.Activation(custom_leaky_1)(w_7)
+            w_7 = keras.layers.Activation(custom_leaky)(w_7)
             w_8 = keras.layers.Activation(custom_activation)(w_8)
         
         def mk_more_wires_1(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
@@ -270,7 +270,7 @@ def build_model(dp_rate = 0.5):
             output_ls.append(tf.keras.layers.Concatenate()(x_1))
         for i in range(len(output_ls)):
             output_ls[i] = tf.keras.layers.Reshape((3, 3, 2, 512))(output_ls[i])
-            output_ls[i] = tf.keras.layers.Conv3D(512, (2, 2, 2), 1, activation=custom_leaky_1)(output_ls[i])
+            output_ls[i] = tf.keras.layers.Conv3D(512, (2, 2, 2), 1, activation=custom_leaky)(output_ls[i])
             output_ls[i] = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 1))(output_ls[i])
             output_ls[i] = tf.keras.layers.Flatten()(output_ls[i])
         return output_ls
@@ -285,7 +285,7 @@ def build_model(dp_rate = 0.5):
     
     x_2 = tf.keras.Sequential([
         tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(256, activation=custom_leaky_1),
+        tf.keras.layers.Dense(256, activation=custom_leaky),
         tf.keras.layers.Dense(256),
         keras.layers.Activation(custom_activation),
         keras.layers.BatchNormalization(),
@@ -300,7 +300,7 @@ def build_model(dp_rate = 0.5):
     
     x_4 = tf.keras.Sequential([
         tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(256, activation=custom_leaky_1),
+        tf.keras.layers.Dense(256, activation=custom_leaky),
         tf.keras.layers.Dense(256),
         keras.layers.Activation(custom_activation),
         keras.layers.BatchNormalization(),
@@ -314,7 +314,7 @@ def build_model(dp_rate = 0.5):
 
     x_6 = tf.keras.Sequential([
         tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(256, activation=custom_leaky_1),
+        tf.keras.layers.Dense(256, activation=custom_leaky),
         tf.keras.layers.Dense(256),
         keras.layers.Activation(custom_activation),
         keras.layers.BatchNormalization(),
@@ -330,7 +330,7 @@ def build_model(dp_rate = 0.5):
     
     x_8 = tf.keras.Sequential([
         tf.keras.layers.Dropout(dp_rate),
-        tf.keras.layers.Dense(256, activation=custom_leaky_1),
+        tf.keras.layers.Dense(256, activation=custom_leaky),
         tf.keras.layers.Dense(256),
         keras.layers.Activation(custom_activation),
         keras.layers.BatchNormalization()
@@ -338,25 +338,25 @@ def build_model(dp_rate = 0.5):
 
 
 
-    x_1_1 =tf.keras.layers.Dense(256, activation=custom_leaky_1)(keras.layers.Concatenate()([x_1, x_2]))
+    x_1_1 =tf.keras.layers.Dense(256, activation=custom_leaky)(keras.layers.Concatenate()([x_1, x_2]))
 
-    x_1_2 = tf.keras.layers.Dense(256, activation=custom_leaky_1)(keras.layers.Concatenate()([x_3, x_4]))
+    x_1_2 = tf.keras.layers.Dense(256, activation=custom_leaky)(keras.layers.Concatenate()([x_3, x_4]))
 
     x_2_1 =tf.keras.layers.Dense(256, activation='sigmoid')(keras.layers.Add()([x_1_1, x_1_2]))
 
     x_2_2 =tf.keras.layers.Dense(256, activation=custom_activation)(keras.layers.Add()([x_5, x_6]))
 
-    x_3_1 =tf.keras.layers.Dense(512, activation=custom_leaky_1)(keras.layers.Concatenate()([x_2_1, x_7]))
+    x_3_1 =tf.keras.layers.Dense(512, activation=custom_leaky)(keras.layers.Concatenate()([x_2_1, x_7]))
 
     x_3_1 = keras.layers.Concatenate()([x_3_1, x_1_1])
 
-    x_3_2 =tf.keras.layers.Dense(512, activation=custom_leaky_1)(keras.layers.Concatenate()([x_2_2, x_8]))
+    x_3_2 =tf.keras.layers.Dense(512, activation=custom_leaky)(keras.layers.Concatenate()([x_2_2, x_8]))
 
     x_3_2 = keras.layers.Concatenate()([x_3_2, x_1_2])
 
     x_5 = keras.layers.Concatenate()([x_3_1, x_3_2])
 
-    x_5 = tf.keras.layers.Dense(1024, activation=custom_leaky_1)(x_5)
+    x_5 = tf.keras.layers.Dense(1024, activation=custom_leaky)(x_5)
 
     x_5 = keras.layers.LayerNormalization()(x_5)
 
@@ -375,13 +375,13 @@ def build_model(dp_rate = 0.5):
         w_8 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
         
         old_w_1 = tf.keras.layers.Dense(128, activation=custom_activation)(old_w_1)
-        w_2 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_2)
+        w_2 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_2)
         w_3 = tf.keras.layers.Dense(128, activation=custom_activation)(w_3)
-        w_4 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_4)
+        w_4 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_4)
         w_5 = tf.keras.layers.Dense(128, activation=custom_activation)(w_5)
-        w_6 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_6)
+        w_6 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_6)
         w_7 = tf.keras.layers.Dense(128, activation=custom_activation)(w_7)
-        w_8 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_8)
+        w_8 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_8)
         
         w_1 = tf.keras.layers.Add()([old_w_1, w_2])
         old_w_2 = tf.keras.layers.Add()([w_2, w_3])
@@ -392,13 +392,13 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Add()([w_7, w_8])
         w_8 = tf.keras.layers.Add()([w_8, old_w_1])
         
-        w_1 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_1)
+        w_1 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_1)
         old_w_2 = tf.keras.layers.Dense(128, activation=custom_activation)(old_w_2)
-        w_3 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_3)
+        w_3 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_3)
         w_4 = tf.keras.layers.Dense(128, activation=custom_activation)(w_4)
-        w_5 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_5)
+        w_5 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_5)
         w_6 = tf.keras.layers.Dense(128, activation=custom_activation)(w_6)
-        w_7 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_7)
+        w_7 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_7)
         w_8 = tf.keras.layers.Dense(128, activation=custom_activation)(w_8)
 
         
@@ -411,13 +411,13 @@ def build_model(dp_rate = 0.5):
         w_7 = tf.keras.layers.Add()([w_7, w_1])
         w_8 = tf.keras.layers.Add()([w_8, old_w_2])
 
-        w_1 = keras.layers.Activation(custom_leaky_1)(w_1)
+        w_1 = keras.layers.Activation(custom_leaky)(w_1)
         w_2 = keras.layers.Activation(custom_activation)(w_2)
-        w_3 = keras.layers.Activation(custom_leaky_1)(w_3)
+        w_3 = keras.layers.Activation(custom_leaky)(w_3)
         w_4 = keras.layers.Activation(custom_activation)(w_4)
-        w_5 = keras.layers.Activation(custom_leaky_1)(w_5)
+        w_5 = keras.layers.Activation(custom_leaky)(w_5)
         w_6 = keras.layers.Activation(custom_activation)(w_6)
-        w_7 = keras.layers.Activation(custom_leaky_1)(w_7)
+        w_7 = keras.layers.Activation(custom_leaky)(w_7)
         w_8 = keras.layers.Activation(custom_activation)(w_8)
         
         def mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8):
@@ -431,13 +431,13 @@ def build_model(dp_rate = 0.5):
         [w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8] = mk_more_wires(w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8)
                 
         w_1 = tf.keras.layers.Dense(128, activation=custom_activation)(w_1)
-        w_2 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_2)
+        w_2 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_2)
         w_3 = tf.keras.layers.Dense(128, activation=custom_activation)(w_3)
-        w_4 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_4)
+        w_4 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_4)
         w_5 = tf.keras.layers.Dense(128, activation='softmax')(w_5)
-        w_6 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_6)
+        w_6 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_6)
         w_7 = tf.keras.layers.Dense(128, activation=custom_activation)(w_7)
-        w_8 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_8)
+        w_8 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_8)
         
         res = tf.keras.layers.Concatenate()([w_4, w_5, w_6, w_7, w_8, w_1, w_2, w_3])
         
@@ -451,13 +451,13 @@ def build_model(dp_rate = 0.5):
             w_7 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
             w_8 = tf.keras.layers.Dropout(top_dropoutrate)(x_x)
             
-            w_1 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_1)
+            w_1 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_1)
             w_2 = tf.keras.layers.Dense(128, activation=custom_activation)(w_2)
-            w_3 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_3)
+            w_3 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_3)
             w_4 = tf.keras.layers.Dense(128, activation=custom_activation)(w_4)
-            w_5 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_5)
+            w_5 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_5)
             w_6 = tf.keras.layers.Dense(128, activation=custom_activation)(w_6)
-            w_7 = tf.keras.layers.Dense(128, activation=custom_leaky_1)(w_7)
+            w_7 = tf.keras.layers.Dense(128, activation=custom_leaky)(w_7)
             w_8 = tf.keras.layers.Dense(128, activation=custom_activation)(w_8)
         
             x_x = tf.keras.layers.Concatenate()([w_1, w_2, w_3, w_4, w_5, w_6, w_7, w_8])
@@ -512,7 +512,7 @@ def build_model(dp_rate = 0.5):
 
 # model.save('cifar_model.keras')
 
-model = tf.keras.models.load_model('cifar_model.keras', custom_objects={'custom_leaky':custom_leaky_1, "custom_activation": custom_activation})
+model = tf.keras.models.load_model('cifar_model.keras', custom_objects={'custom_leaky':custom_leaky, "custom_activation": custom_activation})
 
 # model.set_weights(old_model.get_weights())
 
