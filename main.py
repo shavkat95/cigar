@@ -538,7 +538,7 @@ my_callbacks = [
     CustomCallback()
 ]
 
-opt = keras.optimizers.Adam(learning_rate=0.0000001)
+opt = keras.optimizers.Adam(learning_rate=0.001)
 
 model.compile(optimizer=opt, 
               loss='categorical_crossentropy',
@@ -994,18 +994,95 @@ model.save('cifar_model.keras')
 
 
 
+opt = keras.optimizers.Adam(learning_rate=0.001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
 
 
 
 
 
+opt = keras.optimizers.Adam(learning_rate=0.0000001)
+
+model.compile(optimizer=opt, 
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 
 
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
 
+model.save('cifar_model.keras')
 
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
 
+model.save('cifar_model.keras')
 
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
 
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
+
+model.fit(x_train, y_train, callbacks = my_callbacks, batch_size=32, validation_data=(x_test, y_test), epochs=1)
+
+model.save('cifar_model.keras')
 
 
 
