@@ -505,9 +505,6 @@ def build_model(dp_rate = 0.5):
     return model
 
 
-
-# old_model = tf.keras.models.load_model('cifar_model.keras')
-
 # model = build_model()
 
 # model.save('cifar_model.keras')
