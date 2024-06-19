@@ -535,7 +535,7 @@ my_callbacks = [
     CustomCallback()
 ]
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
+opt = keras.optimizers.Adam(learning_rate=0.0001)
 
 model.compile(optimizer=opt, 
               loss='categorical_crossentropy',
